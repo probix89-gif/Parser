@@ -1,0 +1,31 @@
+# Yahoo Mass Dork Parser Bot Configuration
+
+bot:
+  # Telegram bot token (set via TELEGRAM_BOT_TOKEN env var or here)
+  token: ""
+
+# High-throughput concurrency settings
+fetch:
+  max_concurrency: 300        # concurrent HTTP requests
+  max_dork_concurrency: 50    # parallel dorks in batch mode
+  max_pages: 10                # default pages per dork (user can override 1-60)
+  request_timeout: 10         # seconds per request
+  rate_limit_per_sec: 0.0      # 0 = unlimited (no rate limiter)
+
+# Proxy pool settings
+proxy:
+  list_path: "data/proxies.txt"
+  health_check_interval: 30   # recheck dead proxies every N seconds
+  max_failures: 3             # evict proxy after N consecutive failures
+
+# Data file paths
+data:
+  blocklist_path: "data/blocklist.txt"
+  user_agents_path: "data/user_agents.txt"
+  results_per_page: 50        # URLs per Telegram message
+  output_dir: "output"
+
+# Throughput metrics
+metrics:
+  enabled: true
+  target_urls_per_sec: 1000

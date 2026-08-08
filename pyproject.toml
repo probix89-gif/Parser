@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yahoo-mass-dork-bot"
+version = "1.0.0"
+description = "High-throughput Yahoo mass dork parser Telegram bot with TLS fingerprint rotation and proxy pool"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "PROBIX"}]
+dependencies = [
+    "python-telegram-bot>=21.0",
+    "curl_cffi>=0.7",
+    "httpx>=0.27",
+    "pydantic>=2.0",
+    "loguru>=0.7",
+    "aiofiles>=23.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+
+[project.scripts]
+yahoo-dork-bot = "src.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
