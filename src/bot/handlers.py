@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import re
 from loguru import logger
 
@@ -50,11 +51,13 @@ class DorkBot:
         self.proxy_pool.start_background_probing()
 
         app = Application.builder().token(self.config.token).build()
+
         # Commands
         app.add_handler(CommandHandler("dork", self._dork))
         app.add_handler(CommandHandler("mass", self._mass_info))
         app.add_handler(CommandHandler("status", self._status))
         app.add_handler(CommandHandler("help", self._help))
+
         # File upload handler (.txt files only)
         app.add_handler(
             MessageHandler(
@@ -62,8 +65,23 @@ class DorkBot:
                 self._handle_dork_file,
             )
         )
+
         logger.info("Bot started — ready for mass dork processing")
-        await app.run_polling()
+
+        # python-telegram-bot's run_polling() manages its own event loop.
+        # Since main.py already calls asyncio.run(bot.start()), use the
+        # asynchronous application lifecycle instead.
+        await app.initialize()
+        await app.start()
+        await app.updater.start_polling()
+
+        try:
+            # Keep the existing asyncio event loop alive while polling.
+            await asyncio.Event().wait()
+        finally:
+            await app.updater.stop()
+            await app.stop()
+            await app.shutdown()
 
     # ── Single Dork ──────────────────────────────────────────────
 
