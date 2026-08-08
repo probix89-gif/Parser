@@ -58,7 +58,7 @@ class DorkBot:
         # File upload handler (.txt files only)
         app.add_handler(
             MessageHandler(
-                filters.Document.TEXT_FILE & ~filters.COMMAND,
+                filters.Document.FileExtension("txt") & ~filters.COMMAND,
                 self._handle_dork_file,
             )
         )
